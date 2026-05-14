@@ -831,6 +831,36 @@ async function createWasm() {
       abortOnCannotGrowMemory(requestedSize);
     };
 
+  
+  var runtimeKeepaliveCounter = 0;
+  var keepRuntimeAlive = () => noExitRuntime || runtimeKeepaliveCounter > 0;
+  var _proc_exit = (code) => {
+      EXITSTATUS = code;
+      if (!keepRuntimeAlive()) {
+        Module['onExit']?.(code);
+        ABORT = true;
+      }
+      quit_(code, new ExitStatus(code));
+    };
+  
+  
+  /** @param {boolean|number=} implicit */
+  var exitJS = (status, implicit) => {
+      EXITSTATUS = status;
+  
+      checkUnflushedContent();
+  
+      // if exit() was called explicitly, warn the user if the runtime isn't actually being shut down
+      if (keepRuntimeAlive() && !implicit) {
+        var msg = `program exited (with status: ${status}), but keepRuntimeAlive() is set (counter=${runtimeKeepaliveCounter}) due to an async operation, so halting execution but not exiting the runtime or preventing further async execution (you can use emscripten_force_exit, if you want to force a true shutdown)`;
+        readyPromiseReject?.(msg);
+        err(msg);
+      }
+  
+      _proc_exit(status);
+    };
+  var _exit = exitJS;
+
   var UTF8Decoder = globalThis.TextDecoder && new TextDecoder();
   
   var findStringEnd = (heapOrArray, idx, maxBytesToRead, ignoreNul) => {
@@ -1191,7 +1221,6 @@ Module['FS_createPreloadedFile'] = FS.createPreloadedFile;
   'setTempRet0',
   'createNamedFunction',
   'zeroMemory',
-  'exitJS',
   'getHeapMax',
   'growMemory',
   'withStackSave',
@@ -1209,7 +1238,6 @@ Module['FS_createPreloadedFile'] = FS.createPreloadedFile;
   'getDynCaller',
   'dynCall',
   'handleException',
-  'keepRuntimeAlive',
   'runtimeKeepalivePush',
   'runtimeKeepalivePop',
   'callUserCallback',
@@ -1386,6 +1414,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'stackRestore',
   'stackAlloc',
   'ptrToString',
+  'exitJS',
   'abortOnCannotGrowMemory',
   'ENV',
   'ERRNO_CODES',
@@ -1395,6 +1424,7 @@ missingLibrarySymbols.forEach(missingLibrarySymbol)
   'timers',
   'warnOnce',
   'readEmAsmArgsArray',
+  'keepRuntimeAlive',
   'wasmTable',
   'wasmMemory',
   'noExitRuntime',
@@ -1638,6 +1668,8 @@ var wasmImports = {
   _abort_js: __abort_js,
   /** @export */
   emscripten_resize_heap: _emscripten_resize_heap,
+  /** @export */
+  exit: _exit,
   /** @export */
   fd_close: _fd_close,
   /** @export */
