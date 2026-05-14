@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, Menu, X } from 'lucide-react';
+import { Play, Menu, X, BookOpen } from 'lucide-react';
 import { Editor } from './components/Editor';
 import { Terminal } from './components/Terminal';
 import { runNfaCode } from './lib/wasmLoader';
@@ -17,6 +17,7 @@ export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isRunning, setIsRunning] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   const handleRun = async () => {
     if (isRunning) return;
@@ -50,6 +51,12 @@ export default function App() {
           </h1>
         </div>
         <div className="hidden lg:flex items-center gap-6 text-xs text-white/40">
+          <button 
+            onClick={() => setIsGuideOpen(true)}
+            className="flex items-center gap-2 hover:text-[#00d4ff] transition-colors font-bold text-white/80"
+          >
+            <BookOpen size={16} /> LANGUAGE GUIDE
+          </button>
           <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500"></span> WASM_READY</span>
           <span className="flex items-center gap-2">MEM: 12.4 MB</span>
           <span>UTF-8</span>
@@ -130,8 +137,82 @@ export default function App() {
         </button>
       </div>
 
-      {/* Mobile-only visible terminal component when run is clicked, or we can just always show it below editor on mobile */}
-      {/* Wait, the HTML design doesn't show terminal conditionally, it shows it as sibling on desktop. Let's make it flow on mobile. */}
+      <AnimatePresence>
+        {isGuideOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"
+            onClick={() => setIsGuideOpen(false)}
+          >
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }}
+              className="glass border border-white/20 rounded-xl p-6 w-full max-w-3xl max-h-[85vh] overflow-y-auto custom-scrollbar"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-[#00d4ff] flex items-center gap-3">
+                  <BookOpen /> NFA Language Guide
+                </h2>
+                <button onClick={() => setIsGuideOpen(false)} className="text-gray-400 hover:text-white"><X /></button>
+              </div>
+              
+              <div className="space-y-6 text-sm text-gray-300">
+                <section>
+                  <h3 className="text-white font-bold text-lg mb-2">1. The Basics</h3>
+                  <p>NFA supports standard arithmetic with strict PEMDAS ordering.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">(10 + 5) * (20 / 2)</pre>
+                </section>
+
+                <section>
+                  <h3 className="text-white font-bold text-lg mb-2">2. Variables & State</h3>
+                  <p>Variables are declared with <code className="text-[#00d4ff]">let</code>. They can be updated dynamically via reassignment.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
+let score = 100{'\n'}
+score = score + 50
+                  </pre>
+                </section>
+
+                <section>
+                  <h3 className="text-white font-bold text-lg mb-2">3. Printing</h3>
+                  <p>Output values directly to the Virtual Terminal using <code className="text-[#00d4ff]">print()</code>.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">print(score)</pre>
+                </section>
+
+                <section>
+                  <h3 className="text-white font-bold text-lg mb-2">4. Conditionals</h3>
+                  <p>In NFA, <code className="text-[#00d4ff]">if</code> statements are expressions that immediately return values.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
+let status = if (score {'>'} 100) 1 else 0
+                  </pre>
+                </section>
+
+                <section>
+                  <h3 className="text-white font-bold text-lg mb-2">5. Loops</h3>
+                  <p>Use standard <code className="text-[#00d4ff]">while</code> loops to execute repetitive logic.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
+let countdown = 3{'\n'}
+while (countdown {'>'} 0) {'{'}{'\n'}
+  print(countdown){'\n'}
+  countdown = countdown - 1{'\n'}
+{'}'}
+                  </pre>
+                </section>
+
+                <section>
+                  <h3 className="text-white font-bold text-lg mb-2">6. Functions & Recursion</h3>
+                  <p>Create reusable blocks using <code className="text-[#00d4ff]">fn</code>. Functions automatically return the result of their last line.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
+fn multiply(a, b) {'{'}{'\n'}
+  a * b{'\n'}
+{'}'}
+                  </pre>
+                </section>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }
