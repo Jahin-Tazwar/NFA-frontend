@@ -1,18 +1,18 @@
 export const EXAMPLES = [
   {
-    name: 'Hello World',
-    code: `// Print a simple message\nprint("Hello, NFA!");`
+    name: 'Arithmetic',
+    code: `// Simple arithmetic\n(5 + 5) * (20 / 2)`
   },
   {
-    name: 'Fibonacci',
-    code: `fn fib(n) {\n  if (n <= 1) return n;\n  return fib(n - 1) + fib(n - 2);\n}\n\nprint(fib(10));`
+    name: 'Variables',
+    code: `let x = 10\nlet y = 20\nx + y`
+  },
+  {
+    name: 'Recursive Fibonacci',
+    code: `fn fib(n) {\n  if n <= 1 n else fib(n-1) + fib(n-2)\n}\n\nfib(10)`
   },
   {
     name: 'Factorial',
-    code: `fn factorial(n) {\n  let result = 1;\n  for (let i = 2; i <= n; i++) {\n    result = result * i;\n  }\n  return result;\n}\n\nprint(factorial(5));`
-  },
-  {
-    name: 'Syntax Error (Test)',
-    code: `fn broken() {\n  return "missing quotes;\n}`
+    code: `fn factorial(n) {\n  if n == 0 1 else n * factorial(n - 1)\n}\n\nfactorial(5)`
   }
 ];
