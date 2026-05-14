@@ -1,0 +1,6 @@
+{
+  "name": "NFA Playground",
+  "description": "Dark-Room Hacker playground for the custom NFA programming language, featuring a Wasm-integrated terminal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
