@@ -1,4 +1,5 @@
 let nfaModule: any = null;
+let printBuffer: string = "";
 
 export const runNfaCode = async (code: string): Promise<string> => {
   const win = window as any;
@@ -7,7 +8,10 @@ export const runNfaCode = async (code: string): Promise<string> => {
   if (!nfaModule) {
     if (typeof win.createNfaModule === 'function') {
       try {
-        nfaModule = await win.createNfaModule();
+        nfaModule = await win.createNfaModule({
+          print: (text: string) => { printBuffer += text + "\n"; },
+          printErr: (text: string) => { printBuffer += text + "\n"; }
+        });
         console.log("NFA Engine Initialized Successfully");
       } catch (err) {
         return `[INITIALIZATION_ERROR]: Failed to boot NFA engine.`;
@@ -17,10 +21,20 @@ export const runNfaCode = async (code: string): Promise<string> => {
     }
   }
 
+  // Clear buffer before running new code
+  printBuffer = "";
+
   // 2. Run the code
   try {
     const result = nfaModule.ccall('run_nfa', 'string', ['string'], [code]);
-    return result;
+    
+    // Combine our print output with the final returned expression
+    let finalOutput = printBuffer;
+    if (result && result.trim() !== "") {
+      finalOutput += result;
+    }
+    
+    return finalOutput.trim();
   } catch (err: any) {
     return `[NFA_RUNTIME_ERROR]: ${err.message || 'Fatal crash in WebAssembly module.'}`;
   }
