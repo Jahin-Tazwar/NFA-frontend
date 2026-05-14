@@ -1,20 +1,27 @@
-/**
- * Loader for the NFA WebAssembly module.
- * Falls back to a simulated compiler environment if nfa.wasm is not found,
- * ensuring the UI can be tested immediately.
- */
+let nfaModule: any = null;
+
 export const runNfaCode = async (code: string): Promise<string> => {
   const win = window as any;
-  
-  if (typeof win !== 'undefined' && win.Module && win.Module.ccall) {
-    try {
-      // The C function run_nfa is exported via EMSCRIPTEN_KEEPALIVE
-      const result = win.Module.ccall('run_nfa', 'string', ['string'], [code]);
-      return result;
-    } catch (err: any) {
-      return `[NFA_RUNTIME_ERROR]: ${err.message || 'Fatal crash in WebAssembly module.'}`;
+
+  // 1. Initialize the module if it hasn't been already
+  if (!nfaModule) {
+    if (typeof win.createNfaModule === 'function') {
+      try {
+        nfaModule = await win.createNfaModule();
+        console.log("NFA Engine Initialized Successfully");
+      } catch (err) {
+        return `[INITIALIZATION_ERROR]: Failed to boot NFA engine.`;
+      }
+    } else {
+      return `[SYSTEM_ERROR]: NFA Engine (nfa.js) not found. \nPlease ensure you have compiled the C code using emcc and placed nfa.js/nfa.wasm in the public folder.`;
     }
   }
 
-  return `[SYSTEM_ERROR]: NFA Engine (nfa.js) not found. \nPlease ensure you have compiled the C code using emcc and placed nfa.js/nfa.wasm in the public folder.`;
+  // 2. Run the code
+  try {
+    const result = nfaModule.ccall('run_nfa', 'string', ['string'], [code]);
+    return result;
+  } catch (err: any) {
+    return `[NFA_RUNTIME_ERROR]: ${err.message || 'Fatal crash in WebAssembly module.'}`;
+  }
 };
