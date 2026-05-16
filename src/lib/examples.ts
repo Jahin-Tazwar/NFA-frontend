@@ -8,19 +8,19 @@ export const EXAMPLES = [
 
 // 1. BUILT-IN FUNCTIONS
 // You can print output to the terminal using print()
-print(100)
+print("Hello NFA!")
 
 // 2. MATH & OPERATIONS
 // NFA supports standard math and respects PEMDAS
 let math_result = (10 + 5) * (20 / 2)
 print(math_result)
 
-// 3. VARIABLES & REASSIGNMENT
-// Create variables using the 'let' keyword
+// 3. VARIABLES & DATA TYPES
+// NFA supports Numbers, Strings, and Arrays!
 let counter = 5
-// Update existing variables directly (without let)
-counter = counter - 1
-print(counter)
+let status = "Running"
+let data = [1, 2, "three", [4, 5]]
+print(data)
 
 // 4. CONDITIONALS (If/Else Expressions)
 // In NFA, 'if' statements are expressions! 

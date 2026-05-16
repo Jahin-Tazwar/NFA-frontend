@@ -159,16 +159,29 @@ export default function App() {
               <div className="space-y-6 text-sm text-gray-300">
                 <section>
                   <h3 className="text-white font-bold text-lg mb-2">1. The Basics</h3>
-                  <p>NFA supports standard arithmetic with strict PEMDAS ordering.</p>
-                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">(10 + 5) * (20 / 2)</pre>
+                  <p>NFA supports standard arithmetic with strict PEMDAS ordering and dynamic Strings.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
+(10 + 5) * (20 / 2){'\n'}
+print("Hello World")
+                  </pre>
                 </section>
 
                 <section>
                   <h3 className="text-white font-bold text-lg mb-2">2. Variables & State</h3>
-                  <p>Variables are declared with <code className="text-[#00d4ff]">let</code>. They can be updated dynamically via reassignment.</p>
+                  <p>Variables are declared with <code className="text-[#00d4ff]">let</code>. They can store numbers, strings, or even entire arrays.</p>
                   <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
 let score = 100{'\n'}
-score = score + 50
+let msg = "Level Up!"{'\n'}
+let items = [1, 2, "Sword"]
+                  </pre>
+                </section>
+
+                <section>
+                  <h3 className="text-white font-bold text-lg mb-2">3. Arrays</h3>
+                  <p>NFA supports composite Arrays that can store mixed data types.</p>
+                  <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
+let my_list = [10, "Gold", [1, 2]]{'\n'}
+print(my_list)
                   </pre>
                 </section>
 
