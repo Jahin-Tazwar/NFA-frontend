@@ -6,14 +6,15 @@ export const EXAMPLES = [
 // Welcome to the NFA interactive playground!
 // ==========================================
 
-// 1. BUILT-IN FUNCTIONS
-// You can print output to the terminal using print()
-print("Hello NFA!")
+// 1. BUILT-IN FUNCTIONS & STRINGS
+// print() prints output, and + can concatenate strings!
+print("Hello " + "NFA!")
 
 // 2. MATH & OPERATIONS
-// NFA supports standard math and respects PEMDAS
+// NFA supports standard math, respects PEMDAS, and supports modulo (%)
 let math_result = (10 + 5) * (20 / 2)
 print(math_result)
+print(10 % 3) // Modulo: returns 1
 
 // 3. VARIABLES & DATA TYPES
 // NFA supports Numbers, Strings, and Arrays!
@@ -21,6 +22,13 @@ let counter = 5
 let status = "Running"
 let data = [1, 2, "three", [4, 5]]
 print(data)
+
+// 4. ARRAYS & INDEXING
+// Access and update elements in-place, and query size with len()
+print(data[2]) // Accesses "three"
+data[0] = 99 // Mutates index 0 in-place
+print(data)
+print(len(data)) // Prints size of array (4)
 
 // 4. CONDITIONALS (If/Else Expressions)
 // In NFA, 'if' statements are expressions! 

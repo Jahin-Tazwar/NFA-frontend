@@ -159,10 +159,11 @@ export default function App() {
               <div className="space-y-6 text-sm text-gray-300">
                 <section>
                   <h3 className="text-white font-bold text-lg mb-2">1. The Basics</h3>
-                  <p>NFA supports standard arithmetic with strict PEMDAS ordering and dynamic Strings.</p>
+                  <p>NFA supports standard arithmetic (including modulo <code className="text-[#00d4ff]">%</code>) with strict PEMDAS ordering, dynamic Strings, and String concatenation.</p>
                   <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
 (10 + 5) * (20 / 2){'\n'}
-print("Hello World")
+10 % 3 // Modulo: returns 1{'\n'}
+print("Hello " + "World") // Concatenation
                   </pre>
                 </section>
 
@@ -178,10 +179,12 @@ let items = [1, 2, "Sword"]
 
                 <section>
                   <h3 className="text-white font-bold text-lg mb-2">3. Arrays</h3>
-                  <p>NFA supports composite Arrays that can store mixed data types.</p>
+                  <p>NFA supports composite Arrays that can store mixed data types. You can read/write elements by index, and query the size with <code className="text-[#00d4ff]">len()</code>.</p>
                   <pre className="bg-black/50 p-3 rounded mt-2 text-[#00d4ff]">
 let my_list = [10, "Gold", [1, 2]]{'\n'}
-print(my_list)
+print(my_list[0]) // Reads 10{'\n'}
+my_list[0] = 50 // Updates index 0 in-place{'\n'}
+print(len(my_list)) // Prints 3
                   </pre>
                 </section>
 
